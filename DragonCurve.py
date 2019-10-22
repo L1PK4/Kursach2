@@ -61,12 +61,13 @@ class curve(object):
 
 
 def main():
-    dSpeed = 10
+    dSpeed = 0
     running = True
     i = 2
     cu = curve([(500,500), (500,495)])
     cu.encode(17)
     ui.fill((255,255,255))
+    font=pygame.font.SysFont("arial",16)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -83,6 +84,8 @@ def main():
             elif event.type == pygame.KEYUP:
                 if (event.key == pygame.K_LEFT) or (event.key == pygame.K_RIGHT):
                     dSpeed = 0
+        text = font.render("Delay = %d"%cu.delay,1,(10,10,10),(255,255,255))
+        ui.blit(text,(0,0))
         cu.change_delay(dSpeed)
         cu.draw_n(i)
         pygame.display.update()
