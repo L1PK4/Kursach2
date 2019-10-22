@@ -1,6 +1,7 @@
 import pygame
 import math
 
+
 def sign(a):
     if a > 0:
         return 1
@@ -23,12 +24,23 @@ def code(code_):
 
 
 class curve(object):
+
     points = []
+    delay = 10
+
     def __init__(self, points_):
         self.points = points_
-    def draw(self, a):
-        # pygame.time.delay(3)
+
+    def change_delay(self, d):
+        if self.delay + d > 0:
+            self.delay += d
+        else:
+            self.delay = 0
+
+    def draw_n(self, a):
+        pygame.time.delay(self.delay)
         pygame.draw.line(ui,(0,0,0),self.points[a],self.points[a+1])
+
     def encode(self, n):
         i = 1
         for c in code(n - 1):
@@ -39,9 +51,19 @@ class curve(object):
             else:
                 self.points.append((self.points[i][0] - 3 * sign(dy), self.points[i][1] - 3 * sign(dx)))
             i += 1
+
+    def draw_p(self,n):
+        self.points = []
+        self.encode(n)
+        pygame.time.delay(self.delay)
+        for i in len(points):
+            pygame.draw.line(ui,(0,0,0),self.points[i],self.points[i+1])
+
+
 def main():
+    dSpeed = 10
     running = True
-    i = 1
+    i = 2
     cu = curve([(500,500), (500,495)])
     cu.encode(17)
     ui.fill((255,255,255))
@@ -53,10 +75,17 @@ def main():
                 if event.key == pygame.K_SPACE:
                     i = 1
                     ui.fill((255,255,255))
-        cu.draw(i)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    dSpeed = +2
+                elif event.key == pygame.K_RIGHT:
+                    dSpeed = -2
+            elif event.type == pygame.KEYUP:
+                if (event.key == pygame.K_LEFT) or (event.key == pygame.K_RIGHT):
+                    dSpeed = 0
+        cu.change_delay(dSpeed)
+        cu.draw_n(i)
         pygame.display.update()
-        if i % 100000 == 0:
-            print(i)
         i += 1
 if __name__ == "__main__":
     main()
