@@ -43,7 +43,7 @@ def main():
     running = True
     i = 1
     cu = curve([(500,500), (500,495)])
-    cu.encode(40)
+    cu.encode(17)
     ui.fill((255,255,255))
     while running:
         for event in pygame.event.get():
