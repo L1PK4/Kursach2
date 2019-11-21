@@ -50,9 +50,9 @@ class curve(object):
 
 
     ## Функция рисования до номера поворота ##
-    def draw_n(self, a):
+    def draw_n(self, a, color):
         pygame.time.delay(self.delay)
-        pygame.draw.line(ui,(0,0,0),self.points[a],self.points[a+1])
+        pygame.draw.line(ui,color,self.points[a],self.points[a+1])
     ##########################################
 
     ## Функция кодировки координат из кода поворотов ##
@@ -81,7 +81,8 @@ class curve(object):
 ## Основная функция ##
 def main():
     dSpeed = 0                                                                      ## Изменение задержки
-    running = True                                                                  ## Проверка работы программы
+    running = True
+    stop = False                                                                ## Проверка работы программы
     i = 1                                                                           ## Номер
     cu = curve([(500,500), (500,495)])                                              ## Инициализация кривой
     cu.encode(17)                                                                   ## Кодировка
@@ -95,7 +96,7 @@ def main():
                 running = False
             ## Функции рестарта и ускорения ##
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_r:
                     i = 1
                     ui.fill((255,255,255))
             if event.type == pygame.KEYDOWN:
@@ -103,18 +104,22 @@ def main():
                     dSpeed = +2
                 elif event.key == pygame.K_RIGHT:
                     dSpeed = -2
+                elif event.key == pygame.K_SPACE:
+                    stop = True
             elif event.type == pygame.KEYUP:
                 if (event.key == pygame.K_LEFT) or (event.key == pygame.K_RIGHT):
                     dSpeed = 0
+                if event.key == pygame.K_SPACE:
+                    stop = False
             ####################################
 
-
-        text = font.render("Delay = %d"%cu.delay,1,(10,10,10),(255,255,255))        ## Инициализация текста
-        ui.blit(text,(0,0))                                                         ## Наложение текста
-        cu.change_delay(dSpeed)                                                     ## Смена задержки
-        cu.draw_n(i)                                                                ## рисование отрезка
-        pygame.display.update()                                                     ## обновление экрана
-        i += 1                                                                      ## следующий шаг
+        if not stop:
+            text = font.render("Delay = %d"%cu.delay,1,(10,10,10),(255,255,255))        ## Инициализация текста
+            ui.blit(text,(0,0))                                                         ## Наложение текста
+            cu.change_delay(dSpeed)                                                     ## Смена задержки
+            cu.draw_n(i,(i % 250, 0, 0) )                                                                ## рисование отрезка
+            pygame.display.update()                                                     ## обновление экрана
+            i += 1                                                                      ## следующий шаг
 
 ## Запуск программы если         ##
 ## запускается только сам скрипт ##
